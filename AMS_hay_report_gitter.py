@@ -2,11 +2,11 @@
 # 02-10-2020
 
 import arrow
-import os
+import subprocess
 import urllib.request
 
 today = arrow.utcnow().format('YYYY_MMM_DD')
-logfile = open('logfile_' + today + '.log', 'w')
+logfile = open('Logs/logfile_' + today + '.log', 'w')
 
 def logmsg(msg):
 	logfile.write(arrow.utcnow().format() + '\t' + msg + '\n')
@@ -15,6 +15,9 @@ def logmsg(msg):
 link = "https://www.ams.usda.gov/mnreports/gl_gr310.txt"
 
 f = urllib.request.urlopen(link)
+
+logmsg('requested ' + link)
+
 file = f.read()
 report = file.decode("ascii", "replace")
 
@@ -23,13 +26,19 @@ date = report.partition('Thu ')[2][:12]
 
 date = arrow.get(date.replace(',', '').rstrip().replace(' ', '-'), 'MMM-D-YYYY')
 
-filename = filename + '_' + str(date.year) + '_' + str(date.month) + '_' + str(date.day) + '.txt'
+filename = "Reports/" + filename + '_' + str(date.year) + '_' + str(date.month) + '_' + str(date.day) + '.txt'
 
 filename
-os.chdir("/home/user1/workspace/AMS Hay Reports/")
 outfile = open(filename, 'w')
 outfile.write(report)
 outfile.close()
 
 logmsg('write to ' + filename)
+
+logmsg('attempting git commit')
+
+subprocess.Popen( ['git', 'add', "Reports/"])
+subprocess.Popen( ['git', 'add', "Logs/"])
+
+
 logfile.close()
