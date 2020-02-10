@@ -35,10 +35,11 @@ outfile.close()
 
 logmsg('write to ' + filename)
 
-logmsg('attempting git commit')
+logmsg('git commit')
 
 subprocess.Popen( ['git', 'add', "Reports/"])
 subprocess.Popen( ['git', 'add', "Logs/"])
+subprocess.Popen( ['git', 'commit', '-m', 'Automatic commit from python script'])
 
 
 logfile.close()
